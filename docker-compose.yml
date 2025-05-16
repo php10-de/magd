@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  web:
+    image: php:8.1-apache
+    container_name: app_web
+    volumes:
+      - ./public:/var/www/html
+      - ./src:/var/www/src
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    environment:
+      IONCUBE_LOADER: "enabled"
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  db:
+    image: mysql:8
+    container_name: app_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
