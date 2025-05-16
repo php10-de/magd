@@ -1,0 +1,41 @@
+{
+  "name": "php10-de/magd",
+  "description": "MAGD",
+  "type": "library",
+  "license": "proprietary",
+  "version": "1.0.0",
+  "scripts": {
+    "post-install-cmd": [
+      "php scripts/setup.php"
+    ]
+  },
+  "config": {
+    "platform": {
+      "php": "8.2"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/php10-de/bigredbutton"
+    }
+  ],
+  "require": {
+    "php": ">=7.3",
+    "php10-de/bigredbutton": "^1.0",
+    "symfony/mailer": "^5.0",
+    "symfony/mime": "^5.4",
+    "psr/log": "1.1.4",
+    "orhanerday/open-ai": "^4.7",
+    "phpmailer/phpmailer": "^6.9",
+    "php-imap/php-imap": "^2.0"
+  },
+  "autoload": {
+    "classmap": [
+      "src/app/hrose"
+    ]
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
+}
