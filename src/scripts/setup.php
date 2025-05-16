@@ -40,8 +40,12 @@ if (!is_dir($sourceDir)) {
 echo "🚀 Copying files from $sourceDir to $targetDir\n";
 recursiveCopy($sourceDir, $targetDir, $omit);
 
-$dstPath = $targetDir . 'docker-compose.example.yml';
-copy($sourceDir . '../docker-compose.yml', $targetDir . '/../docker-compose.example.yml');
+$dstPath = $targetDir . '/../docker-compose.example.yml';
+copy($sourceDir . '../docker-compose.yml', $targetDir . '/../docker-compose.dist.yml');
+echo "Copied: $dstPath\n";
+
+$dstPath = $targetDir . '/../Dockerfile';
+copy($sourceDir . '../Dockerfile', $targetDir . '/../Dockerfile.dist');
 echo "Copied: $dstPath\n";
 
 echo "✅ Done.\n";
