@@ -5,7 +5,7 @@ if (file_exists(INC_ROOT."cache_start.php")) {
 }
 ini_set('error_reporting',E_ALL ^ E_DEPRECATED ^ E_NOTICE ^ E_WARNING);
 global $con, $_VALID, $_VALIDDB, $db_name;
-require_once(realpath(dirname(__FILE__))."/../db/db_connect.php");
+require_once(realpath(dirname(__FILE__)) . "/../db/db_connect.dist.php");
 date_default_timezone_set("Europe/Berlin");
 //session_name("hrose");
 session_start();
