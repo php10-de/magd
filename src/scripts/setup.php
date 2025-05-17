@@ -1,7 +1,9 @@
 <?php
 use Composer\InstalledVersions;
 
-require_once __DIR__ . '/../../../../../vendor/autoload.php';
+$rootDir = __DIR__ . '/../../../../../';
+
+require_once $rootDir . 'vendor/autoload.php';
 
 $packageName = 'php10-de/magd'; // Replace with your package name
 
@@ -15,16 +17,29 @@ $phpVersion = PHP_VERSION;
 list($major, $minor) = explode('.', $phpVersion);
 
 echo "PHP Version: $phpVersion\n";
+echo "PHP Major Version: $major\n";
+echo "PHP Minor Version: $minor\n";
 
-$json = file_get_contents(__DIR__ . '/../../../../../composer.json');
+$json = file_get_contents($rootDir . 'composer.json');
 $data = json_decode($json, true);
 
 $phpPlatformVersion = isset($data['config']['platform']['php']) ? $data['config']['platform']['php'] : null;
 
 echo "PHP Platform Version: $phpPlatformVersion\n";
 
-$ionPhpVersion = $phpPlatformVersion ? $phpPlatformVersion : $phpVersion;
+$ionPhpVersion = $phpPlatformVersion ? : $phpVersion;
 
+if (file_exists( $rootDir . 'src/inc/version.php')) {
+    include_once $rootDir . 'src/inc/version.php';
+    echo "HROSE Version: " . HROSE_VERSION . "\n";
+} else {
+    echo "HROSE Version: Not found\n";
+}
+
+if (HROSE_VERSION === $prettyVersion) {
+    echo "HROSE Version matches the package version.\n";
+    echo "✅ No further action. Done.\n";
+}
 function recursiveCopy(string $src, string $dst, array $omitDirs = []): void {
     $dir = opendir($src);
     @mkdir($dst, 0755, true);
@@ -45,6 +60,11 @@ function recursiveCopy(string $src, string $dst, array $omitDirs = []): void {
         if (is_dir($srcPath)) {
             recursiveCopy($srcPath, $dstPath);
         } else {
+            // Check if the destination file already exists and md5 hash is the same
+            if (file_exists($dstPath) && md5_file($srcPath) === md5_file($dstPath)) {
+                echo "⏭️ Skipping identical file: $dstPath\n";
+                continue;
+            }
             copy($srcPath, $dstPath);
             echo "Copied: $dstPath\n";
         }
@@ -54,7 +74,7 @@ function recursiveCopy(string $src, string $dst, array $omitDirs = []): void {
 }
 
 $sourceDir = __DIR__ . '/../';
-$targetDir = __DIR__ . '/../../../../../src';
+$targetDir = $rootDir . 'src';
 $omit = ['scripts'];
 
 if (!is_dir($sourceDir)) {
@@ -63,7 +83,7 @@ if (!is_dir($sourceDir)) {
 }
 
 echo "🚀 Copying assets from $sourceDir to $targetDir\n";
-recursiveCopy($sourceDir . 'assets/', $targetDir, $omit);
+recursiveCopy($sourceDir . 'assets/', $targetDir . '/assets', $omit);
 
 echo "🚀 Copying files from version $sourceDir $version to $targetDir\n";
 recursiveCopy($sourceDir . $version . '/', $targetDir, $omit);
@@ -78,5 +98,15 @@ echo "Copied: $dstPath\n";
 $dstPath = $targetDir . '/../Dockerfile';
 copy($sourceDir . '../Dockerfile', $targetDir . '/../Dockerfile.dist');
 echo "Copied: $dstPath\n";
+
+$versionFile = $rootDir . 'src/inc/version.php';
+if (file_exists($versionFile)) {
+    $versionContent = file_get_contents($versionFile);
+    $newVersionContent = str_replace('COMPSER_VERSION', $prettyVersion, $versionContent);
+    file_put_contents($versionFile, $newVersionContent);
+    echo "Updated HROSE version in $versionFile\n";
+} else {
+    echo "❌ Version file not found: $versionFile\n";
+}
 
 echo "✅ Done.\n";
