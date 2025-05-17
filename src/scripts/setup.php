@@ -67,7 +67,7 @@ function recursiveCopy(string $src, string $dst, array $omitDirs = []): void {
         } else {
             // Check if the destination file already exists and md5 hash is the same
             if (file_exists($dstPath) && md5_file($srcPath) === md5_file($dstPath)) {
-                echo "⏭️ Skipping identical file: $dstPath\n";
+                // echo "⏭️ Skipping identical file: $dstPath\n";
                 continue;
             }
             copy($srcPath, $dstPath);
@@ -94,16 +94,8 @@ echo "🚀 Copying files from version $sourceDir $version to $targetDir\n";
 $omit = [$ionDirName];
 recursiveCopy($sourceDir . $version . '/', $targetDir, $omit);
 
-echo "🚀 Copying ioncube $ionPhpVersion files from $sourceDir to $targetDir\n";
+echo "🚀 Copying ioncube files from $sourceDir . $version . '/' . $ionDirName to $targetDir\n";
 recursiveCopy($sourceDir . $version . '/' . $ionDirName . '/', $targetDir, $omit);
-
-$dstPath = $targetDir . '/../docker-compose.example.yml';
-copy($sourceDir . '../docker-compose.yml', $targetDir . '/../docker-compose.dist.yml');
-echo "Copied: $dstPath\n";
-
-$dstPath = $targetDir . '/../Dockerfile';
-copy($sourceDir . '../Dockerfile', $targetDir . '/../Dockerfile.dist');
-echo "Copied: $dstPath\n";
 
 $versionFile = $rootDir . 'src/inc/version.php';
 if (file_exists($versionFile)) {
@@ -113,6 +105,72 @@ if (file_exists($versionFile)) {
     echo "Updated HROSE version in $versionFile\n";
 } else {
     echo "❌ Version file not found: $versionFile\n";
+}
+
+$dbConnectSrc = $sourceDir . '../db/db_connect.dist.php';
+$dbConnectDst = $rootDir . 'src/db/db_connect.php';
+if (!file_exists($dbConnectDst)) {
+    if (file_exists($dbConnectSrc)) {
+        copy($dbConnectSrc, $dbConnectDst);
+        echo "Copied: $dbConnectDst\n";
+    } else {
+        echo "❌ db_connect source file not found: $dbConnectSrc\n";
+    }
+} else {
+    echo "⏭️ Skipping db_connect.php, already exists.\n";
+}
+
+
+$hroseIniSrc = $sourceDir . '../inc/hrose_ini.dist.php';
+$hroseIniDst = $rootDir . 'src/inc/hrose_ini.php';
+if (!file_exists($hroseIniDst)) {
+    if (file_exists($hroseIniSrc)) {
+        copy($hroseIniSrc, $hroseIniDst);
+        echo "Copied: $hroseIniDst\n";
+    } else {
+        echo "❌ hrose_ini source file not found: $hroseIniSrc\n";
+    }
+} else {
+    echo "⏭️ Skipping hrose_ini.php, already exists.\n";
+}
+
+$configIncSrc = $sourceDir . '../inc/config.inc.dist.php';
+$configIncDst = $rootDir . 'src/inc/config.inc.php';
+if (!file_exists($configIncDst)) {
+    if (file_exists($configIncSrc)) {
+        copy($configIncSrc, $configIncDst);
+        echo "Copied: $configIncDst\n";
+    } else {
+        echo "❌ config.inc source file not found: $configIncSrc\n";
+    }
+} else {
+    echo "⏭️ Skipping config.inc.php, already exists.\n";
+}
+
+$dockerComposeSrc = $sourceDir . '../docker-compose.dist.yml';
+$dockerComposeDst = $rootDir . 'docker-compose.yml';
+if (!file_exists($dockerComposeDst)) {
+    if (file_exists($dockerComposeSrc)) {
+        copy($dockerComposeSrc, $dockerComposeDst);
+        echo "Copied: $dockerComposeDst\n";
+    } else {
+        echo "❌ docker-compose source file not found: $dockerComposeSrc\n";
+    }
+} else {
+    echo "⏭️ Skipping docker-compose.yml, already exists.\n";
+}
+
+$dockerfileSrc = $sourceDir . '../Dockerfile.dist';
+$dockerfileDst = $rootDir . 'Dockerfile';
+if (!file_exists($dockerfileDst)) {
+    if (file_exists($dockerfileSrc)) {
+        copy($dockerfileSrc, $dockerfileDst);
+        echo "Copied: $dockerfileDst\n";
+    } else {
+        echo "❌ Dockerfile source file not found: $dockerfileSrc\n";
+    }
+} else {
+    echo "⏭️ Skipping Dockerfile, already exists.\n";
 }
 
 $gitignoreSrc = $sourceDir . '../.gitignore.dist';
