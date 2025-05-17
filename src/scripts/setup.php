@@ -19,6 +19,7 @@ list($major, $minor) = explode('.', $phpVersion);
 echo "PHP Version: $phpVersion\n";
 echo "PHP Major Version: $major\n";
 echo "PHP Minor Version: $minor\n";
+$phpMajorMinor = $major . '.' . $minor;
 
 $json = file_get_contents($rootDir . 'composer.json');
 $data = json_decode($json, true);
@@ -27,7 +28,7 @@ $phpPlatformVersion = isset($data['config']['platform']['php']) ? $data['config'
 
 echo "PHP Platform Version: $phpPlatformVersion\n";
 
-$ionPhpVersion = $phpPlatformVersion ? : $phpVersion;
+$ionPhpVersion = $phpPlatformVersion ? : $phpMajorMinor;
 
 if (file_exists( $rootDir . 'src/inc/version.php')) {
     include_once $rootDir . 'src/inc/version.php';
@@ -41,6 +42,10 @@ if (HROSE_VERSION === $prettyVersion) {
     echo "✅ No further action. Done.\n";
 }
 function recursiveCopy(string $src, string $dst, array $omitDirs = []): void {
+    if (!is_dir($src)) {
+        echo "❌ Source directory does not exist: $src\n";
+        return;
+    }
     $dir = opendir($src);
     @mkdir($dst, 0755, true);
 
@@ -88,8 +93,9 @@ recursiveCopy($sourceDir . 'assets/', $targetDir . '/assets', $omit);
 echo "🚀 Copying files from version $sourceDir $version to $targetDir\n";
 recursiveCopy($sourceDir . $version . '/', $targetDir, $omit);
 
-echo "🚀 Copying ioncube  files from $sourceDir to $targetDir\n";
-recursiveCopy($sourceDir . $ionPhpVersion . '/', $targetDir, $omit);
+$ionDirName = 'ionphp' .  str_replace('.', '', $ionPhpVersion);
+echo "🚀 Copying ioncube $ionPhpVersion files from $sourceDir to $targetDir\n";
+recursiveCopy($sourceDir . $version . '/' . $ionDirName . '/', $targetDir, $omit);
 
 $dstPath = $targetDir . '/../docker-compose.example.yml';
 copy($sourceDir . '../docker-compose.yml', $targetDir . '/../docker-compose.dist.yml');

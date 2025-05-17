@@ -22,7 +22,7 @@ Add this to your composer.json:
     "require": 
     {
       "php": ">=7.3",
-     "php10-de/magd": "^1.0"
+      "php10-de/magd": "^1.0"
     },
 
 run
@@ -31,13 +31,14 @@ run
 ## New Develop Version
 To create a new version for development, follow these steps:
 1. Create a new branch from the main branch, e.g. `git checkout -b specialfeature`
-2. Make your changes and commit them, e.g. `git commit -m "Added a new feature"`
-3. Push the branch to the repository, e.g. `git push origin specialfeature`
-4. In your consuming project, update the composer.json to require the new branch, e.g. `"php10-de/magd": "dev-specialfeature"`
-5. Run `composer update` to install the new branch.
-6. Test the new feature in your consuming project.
-7. Once the feature is stable, merge it back into the main branch.
-8. In your consuming project, update the composer.json to require the main branch again, e.g. `"php10-de/magd": "^1.1"`
+2. Add files to scr/dev-specialfeature (later rename to the version, e.g. src/1.1)
+3. Make your changes and commit them, e.g. `git commit -m "Added a new feature"`
+4. Push the branch to the repository, e.g. `git push origin specialfeature`
+5. In your consuming project, update the composer.json to require the new branch, e.g. `"php10-de/magd": "dev-specialfeature"`
+6. Run `composer update` to install the new branch.
+7. Test the new feature in your consuming project.
+8. Once the feature is stable, merge it back into the main branch.
+9. In your consuming project, update the composer.json to require the main branch again, e.g. `"php10-de/magd": "^1.1"`
 
 ## New Release Version
 1. Update the version in composer.json
