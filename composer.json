@@ -20,7 +20,7 @@
   },
   "autoload": {
     "classmap": [
-      "src/app/hrose"
+      "src/1.1/app/hrose"
     ]
   },
   "require-dev": {
