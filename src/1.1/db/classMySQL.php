@@ -111,8 +111,6 @@ class MySQL
                 $GLOBALS ['log']->debug($res . '(' . $time . ')');
 
             }
-            //mail('fraunholz@mac.com','update', $res.'-'.$this->log.'---'."INSERT INTO db_log (query, query_time, query_duration, avg_duration, res) VALUES('".mysqli_real_escape_string($con, $sql)."', now(), " . $time . ", " . $time . "," . (int) $res .") ON DUPLICATE KEY UPDATE cnt = cnt + 1, query_duration=query_duration + " . $time . ", avg_duration = ((query_duration + " . $time . ") / (cnt + 1))");
-
             if ($this->db_log && ($time > $this->slow_query)) {
                 mysqli_query($con, "INSERT INTO db_log (query, query_time, query_duration, avg_duration, request_uri)
                             VALUES('" . mysqli_real_escape_string($con, $sql) . "', now(), " . $time . ", " . $time . ", '" . $_SERVER['REQUEST_URI'] . "')

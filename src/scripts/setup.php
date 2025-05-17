@@ -80,7 +80,6 @@ function recursiveCopy(string $src, string $dst, array $omitDirs = []): void {
 
 $sourceDir = __DIR__ . '/../';
 $targetDir = $rootDir . 'src';
-$omit = ['scripts'];
 
 if (!is_dir($sourceDir)) {
     echo "❌ Source directory does not exist: $sourceDir\n";
@@ -88,12 +87,13 @@ if (!is_dir($sourceDir)) {
 }
 
 echo "🚀 Copying assets from $sourceDir to $targetDir\n";
-recursiveCopy($sourceDir . 'assets/', $targetDir . '/assets', $omit);
-
-echo "🚀 Copying files from version $sourceDir $version to $targetDir\n";
-recursiveCopy($sourceDir . $version . '/', $targetDir, $omit);
+recursiveCopy($sourceDir . 'assets/', $targetDir . '/assets');
 
 $ionDirName = 'ionphp' .  str_replace('.', '', $ionPhpVersion);
+echo "🚀 Copying files from version $sourceDir $version to $targetDir\n";
+$omit = [$ionDirName];
+recursiveCopy($sourceDir . $version . '/', $targetDir, $omit);
+
 echo "🚀 Copying ioncube $ionPhpVersion files from $sourceDir to $targetDir\n";
 recursiveCopy($sourceDir . $version . '/' . $ionDirName . '/', $targetDir, $omit);
 
@@ -113,6 +113,15 @@ if (file_exists($versionFile)) {
     echo "Updated HROSE version in $versionFile\n";
 } else {
     echo "❌ Version file not found: $versionFile\n";
+}
+
+$gitignoreSrc = $sourceDir . '../.gitignore.dist';
+$gitignoreDst = $rootDir . '.gitignore.dist';
+if (file_exists($gitignoreSrc)) {
+    copy($gitignoreSrc, $gitignoreDst);
+    echo "Copied: $gitignoreDst\n";
+} else {
+    echo "❌ .gitignore source file not found: $gitignoreSrc\n";
 }
 
 echo "✅ Done.\n";
