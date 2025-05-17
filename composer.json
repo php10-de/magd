@@ -18,11 +18,6 @@
     "phpmailer/phpmailer": "^6.9",
     "php-imap/php-imap": "^2.0"
   },
-  "autoload": {
-    "classmap": [
-      "src/1.1/app/hrose"
-    ]
-  },
   "require-dev": {
     "phpunit/phpunit": "^9.5"
   }

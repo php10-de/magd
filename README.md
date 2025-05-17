@@ -24,6 +24,11 @@ Add this to your composer.json:
       "php": ">=7.3",
       "php10-de/magd": "^1.0"
     },
+    "autoload": {
+      "classmap": [
+        "src/1.1/app/hrose"
+    ]
+    },
 
 run
 `composer install`
