@@ -32,24 +32,16 @@ while ($row = mysqli_fetch_array($mailRes)) {
             //Server settings
             $mail->SMTPDebug = MAIL_DEBUG_MODE;                      //Enable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP
-            //$mail->Host       = 'smtp.strato.de';                     //Set the SMTP server to send through
-            //$mail->Host       = 'cloud2-vm549.de-nserver.de';                     //Set the SMTP server to send through
             $mail->Host       = SMTP_SERVER;                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            //$mail->Username   = 'foerderverein@paula-fuerst-gemeinschaftsschule.de';                     //SMTP username
-            //$mail->Username   = 'q@fv-kls.de';                     //SMTP username
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication             //SMTP username
             $mail->Username   = SMTP_USER;                     //SMTP username
-            //$mail->Password   = 'paulaf...';                               //SMTP password
-            //$mail->Password   = 'Mukootity50$';                               //SMTP password
             $mail->Password   = SMTP_PASS;                               //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
             $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
             //Recipients
-            //$mail->setFrom('foerderverein@paula-fuerst-gemeinschaftsschule.de', 'Fö&uuml;rderverein der Paula-Fürst-Gemeinschaftsschule e.V.');
             $mail->setFrom($row['from_mail'], $row['from_name']);
             $mail->addAddress($row['recipient'], $row['recipient_name']);     //Add a recipient
-            //$mail->addAddress('fraunholz@mac.com');               //Name is optional
             $mail->CharSet = 'utf-8';
             $mail->addReplyTo($row['response_mail'], $row['response_name']);
             //$mail->addCC('cc@example.com');
