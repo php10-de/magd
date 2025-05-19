@@ -1,7 +1,7 @@
 <?php
-$db_host = "127.0.0.1";
-$db_user = "root";
-$db_pw = "";
+$db_host = "db";
+$db_user = "magduser";
+$db_pw = "magdpass";
 $db_name = "magd";
 
 $con = mysqli_connect($db_host, $db_user, $db_pw) or  die('Verbindung nicht m&ouml;glich : ' . mysqli_error($con));

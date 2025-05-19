@@ -1,7 +1,7 @@
 services:
   web:
     image: php:8.2-apache
-    container_name: app_web
+    container_name: magd_web
     volumes:
       - ./src:/var/www/html
     ports:
@@ -16,13 +16,13 @@ services:
 
   db:
     image: mysql:8
-    container_name: app_db
+    container_name: magd_db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: appdb
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppass
+      MYSQL_DATABASE: magddb
+      MYSQL_USER: magduser
+      MYSQL_PASSWORD: magdpass
     ports:
       - "3306:3306"
 
