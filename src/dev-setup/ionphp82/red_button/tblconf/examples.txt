@@ -1,0 +1,39 @@
+/*** INSTRUCTIONS ***/
+
+The following options can be used for tables ($TBL or $TC):
+
+***
+first_varchar
+to show in dropdown to another table not the first varchar column
+example:
+$TBL['skype']['first_varchar'] = 'nickname';
+
+
+***
+list_search
+to turn off the search
+example:
+$TBL['ih_repo']['list_search'] = false;
+
+***
+list_sort
+to turn off the sorting
+example:
+$TBL['ih_repo']['list_sort'] = false;
+
+
+The following options can be used for fields:
+
+
+***
+hide_from_list
+do not show field in list view
+example:
+$FC['lk_bundle']['org']['hide_from_list'] = true;
+
+
+***
+hide_from_detail
+do not show field in detail view. use short form for foreign key fields, e.g. bank instead of bank_id
+$FC['lk_bundle']['bundle_image']['hide_from_detail'] = true;
+

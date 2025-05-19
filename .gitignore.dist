@@ -3,9 +3,8 @@
 /node_modules
 /vendor
 xdebug.log
-/db/db_connect.php
-/inc/serial.txt
-/inc
-/inc/settings.inc.php
-/inc/config.inc.php
-/inc/pre.config.inc.php
+/src/db/db_connect.php
+/src/inc/serial.txt
+/src/inc/settings.inc.php
+/src/inc/config.inc.php
+/src/inc/pre.config.inc.php

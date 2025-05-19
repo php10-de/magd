@@ -1,0 +1,4 @@
+AddHandler php-fastcgi8.2 .php .phtml
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://domain.de/$1 [R,L]
