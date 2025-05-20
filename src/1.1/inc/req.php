@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/hrose_ini.dist.php");
+require_once(__DIR__ . "/hrose_ini.php");
 if (file_exists(INC_ROOT."cache_start.php")) {
     require_once(INC_ROOT."cache_start.php");
 }

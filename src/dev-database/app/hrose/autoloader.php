@@ -10,13 +10,13 @@ class Autoloader
     {
         spl_autoload_register(function ($class) {
             $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-            if (file_exists($file)) {
-                require $file;
+            if (file_exists(DOC_ROOT . $file)) {
+                require DOC_ROOT . $file;
                 return true;
+            } else {
+                echo "Autoloader: File not found for class $class at " . DOC_ROOT . "$file";
             }
             return false;
         });
     }
 }
-
-Autoloader::register();

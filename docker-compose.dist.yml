@@ -12,7 +12,7 @@ services:
       IONCUBE_LOADER: "enabled"
     build:
       context: .
-      dockerfile: Dockerfile.dist
+      dockerfile: Dockerfile
 
   db:
     image: mysql:8

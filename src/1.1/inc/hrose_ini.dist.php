@@ -73,7 +73,7 @@ defined('DATA_ROOT') || define('DATA_ROOT',DOC_ROOT.'../data/');
 
 $NO = array('No','Nein','n','N');
 
-if (file_exists(__DIR__ . '/config.inc.dist.php')) include __DIR__ . '/config.inc.dist.php';
+if (file_exists(__DIR__ . '/config.inc.php')) include __DIR__ . '/config.inc.php';
 
 defined('TEST_MAIL_RECIPIENT') || define('TEST_MAIL_RECIPIENT', ADMIN_MAIL);
 

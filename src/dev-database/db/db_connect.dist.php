@@ -12,5 +12,6 @@ if (defined('MEMCACHE') AND MEMCACHE == 1) {
     $memcache = new Memcache;
     $memcache->connect('localhost', 11211);
 }
+include 'db_setup.php';
 include 'functions.php';
 ?>
