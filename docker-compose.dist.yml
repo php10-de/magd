@@ -13,6 +13,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    user: "${UID}:${GID}" # Run container as your user
+    command: >
+      sh -c "chown -R ${UID}:www-data /var/www/html &&
+             apache2-foreground"
 
   db:
     image: mysql:8
@@ -25,6 +29,9 @@ services:
       MYSQL_PASSWORD: magdpass
     ports:
       - "3306:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -33,3 +40,7 @@ services:
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: root
+
+volumes:
+  db_data:
+    driver: local
