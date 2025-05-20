@@ -1,6 +1,6 @@
 <?php
 define('DEBUG',false);
-define('ADMIN_MAIL','your-debug@mail');
+define('ADMIN_MAIL','fraunholz@mac.com');
 define('WEBSITE','HROSE');
 define('DEFAULT_GROUP_PERMISSION', 1001);
 

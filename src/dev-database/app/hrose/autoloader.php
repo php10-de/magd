@@ -14,7 +14,7 @@ class Autoloader
                 require DOC_ROOT . $file;
                 return true;
             } else {
-                echo "Autoloader: File not found for class $class at " . DOC_ROOT . "$file";
+                error_log("Autoloader: File not found for class $class at " . DOC_ROOT . "$file");
             }
             return false;
         });
