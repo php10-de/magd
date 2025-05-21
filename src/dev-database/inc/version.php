@@ -1,3 +1,0 @@
-<?php
-
-define('HROSE_VERSION', 'COMPSER_VERSION');
