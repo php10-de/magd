@@ -16,6 +16,19 @@ try {
     } else {
         die('Database structure file not found.');
     }
+
+    $sqlFile = DATA_ROOT . 'seed/magd_data.sql';
+    if (file_exists($sqlFile)) {
+        $sql = file_get_contents($sqlFile);
+        mysqli_multi_query($con, $sql);
+        do {
+            if ($res = mysqli_store_result($con)) {
+                mysqli_free_result($res);
+            }
+        } while (mysqli_next_result($con));
+    } else {
+        die('Database data file not found.');
+    }
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
 }
