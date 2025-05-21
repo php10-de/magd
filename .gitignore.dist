@@ -8,3 +8,4 @@ xdebug.log
 /src/inc/settings.inc.php
 /src/inc/config.inc.php
 /src/inc/pre.config.inc.php
+/src/var

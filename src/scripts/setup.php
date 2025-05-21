@@ -7,11 +7,14 @@ require_once $rootDir . 'vendor/autoload.php';
 
 $packageName = 'php10-de/magd'; // Replace with your package name
 
-$version = InstalledVersions::getVersion($packageName);
-$prettyVersion = InstalledVersions::getPrettyVersion($packageName);
+$composerVersion = InstalledVersions::getVersion($packageName);
+$prettyComposerVersion = InstalledVersions::getPrettyVersion($packageName);
+list($majorComposer, $minorComposer) = explode('.', $prettyComposerVersion);
+$version = $majorComposer . '.' . $minorComposer;
 
+echo "Composer Version: $composerVersion\n";
+echo "Pretty Composer Version: $prettyComposerVersion\n";
 echo "Version: $version\n";
-echo "Pretty Version: $prettyVersion\n";
 
 $phpVersion = PHP_VERSION;
 list($major, $minor) = explode('.', $phpVersion);
@@ -29,6 +32,7 @@ $phpPlatformVersion = isset($data['config']['platform']['php']) ? $data['config'
 echo "PHP Platform Version: $phpPlatformVersion\n";
 
 $ionPhpVersion = $phpPlatformVersion ? : $phpMajorMinor;
+$stopSetup = false;
 
 if (file_exists( $rootDir . 'src/inc/version.php')) {
     include_once $rootDir . 'src/inc/version.php';
@@ -176,7 +180,7 @@ if (!$stopSetup) {
     }
 
     $gitignoreSrc = $sourceDir . '../.gitignore.dist';
-    $gitignoreDst = $rootDir . '.gitignore.dist';
+    $gitignoreDst = $rootDir . '.gitignore';
     if (file_exists($gitignoreSrc)) {
         copy($gitignoreSrc, $gitignoreDst);
         echo "Copied: $gitignoreDst\n";

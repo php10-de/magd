@@ -47,5 +47,5 @@ To create a new version for development, follow these steps:
 
 ## New Release Version
 1. Update the version in composer.json
-2. Add a new tag to the repository, e.g. `git tag -a v1.1.1 -m "Version 1.0.1"`
+2. Add a new tag to the repository, e.g. `git tag -a v1.1.1 -m "Version 1.1.1"`
 3. Push the tag to the repository, e.g. `git push origin v1.1.1`
