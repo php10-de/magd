@@ -3,6 +3,7 @@
 $modul="nav";
 
 require("inc/req.php");
+require_once(DOC_ROOT."db/SQLHistory.php");
 
 // Generally for people with the right to edit nav
 $groupID = 29;
@@ -120,8 +121,8 @@ if (isset($_REQUEST['submitted']) && !$error) {
             if (!mysqli_query($con, $sql)) {
                 throw new Exception('create: ' . mysqli_error($con));
             }
-            $SQLHistory = new SQLHistory();
-            $SQLHistory->writeHistory($sql);
+            //$SQLHistory = new SQLHistory();
+            //$SQLHistory->writeHistory($sql);
         }
         /*** before nav insert ***/
 	    $sql = "INSERT INTO `nav`(nav_id, to_nav_id, gr_id, level, name, link, icon, icon_color) VALUES("
