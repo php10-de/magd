@@ -3,7 +3,7 @@ services:
     image: php:8.2-apache
     container_name: magd_web
     volumes:
-      - ./src:/var/www/html
+      - .:/var/www/html
     ports:
       - "8080:80"
     depends_on:
@@ -15,16 +15,17 @@ services:
       dockerfile: Dockerfile
     user: "${UID}:${GID}" # Run container as your user
     command: >
-      sh -c "chown -R ${UID}:www-data /var/www/html &&
+      sh -c "chown -R ${UID}:www-data /var/www/html/src &&
              apache2-foreground"
 
   db:
-    image: mysql:8
+    image: mariadb:10.1
     container_name: magd_db
     restart: always
     environment:
+      TZ: "Europe/Berlin"
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: magddb
+      MYSQL_DATABASE: magd
       MYSQL_USER: magduser
       MYSQL_PASSWORD: magdpass
     ports:

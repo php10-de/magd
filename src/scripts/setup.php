@@ -153,6 +153,19 @@ if (!$stopSetup) {
         echo "⏭️ Skipping config.inc.php, already exists.\n";
     }
 
+    $configIncSrc = $versionDir . 'inc/pre.config.inc.dist.php';
+    $configIncDst = $rootDir . 'src/inc/pre.config.inc.php';
+    if (!file_exists($configIncDst)) {
+        if (file_exists($configIncSrc)) {
+            copy($configIncSrc, $configIncDst);
+            echo "Copied: $configIncDst\n";
+        } else {
+            echo "❌ config.inc source file not found: $configIncSrc\n";
+        }
+    } else {
+        echo "⏭️ Skipping config.inc.php, already exists.\n";
+    }
+
     $dockerComposeSrc = $sourceDir . '../docker-compose.dist.yml';
     $dockerComposeDst = $rootDir . 'docker-compose.yml';
     if (!file_exists($dockerComposeDst)) {
