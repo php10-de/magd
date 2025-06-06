@@ -201,5 +201,22 @@ if (!$stopSetup) {
         echo "❌ .gitignore source file not found: $gitignoreSrc\n";
     }
 
+    $logsDir = $targetDir . '/var/logs';
+    if (!is_dir($logsDir)) {
+        mkdir($logsDir, 0755, true);
+        echo "Created logs directory: $logsDir\n";
+    } else {
+        echo "Logs directory already exists: $logsDir\n";
+    }
+
+    $mediaDir = $targetDir . '/var/media';
+    if (!is_dir($mediaDir)) {
+        mkdir($mediaDir, 0755, true);
+        echo "Created media directory: $mediaDir\n";
+    } else {
+        echo "Media directory already exists: $mediaDir\n";
+    }
+
+
     echo "✅ Done.\n";
 }

@@ -1,6 +1,7 @@
 <?php
 
 $modul="cron";
+define('LOG_HEARTBEAT', false);
 
 require("inc/req.php");
 
@@ -13,7 +14,7 @@ if (!CRONRUN) GRGR(1);
 //$templates = array('cron_email_despatched');
 //define('TPL_DONE', true);
 
-require_once(VENDOR_ROOT . 'phpclasses/cronparser/CronParser.php');
+require_once(MODULE_ROOT . 'cron/CronParser.php');
 
 $cron = new CronParser();
 
@@ -24,7 +25,7 @@ $crontasks1 = $con->query("
 
 while ($crontask = $crontasks1->fetch_array())
 {
-	if(LOG){
+	if(LOG_HEARTBEAT){
 		error_log("***** Processing cron task '$crontask[task]' *****");
 	}
 	//if one of cron crashed, send alert email
@@ -40,7 +41,7 @@ while ($crontask = $crontasks1->fetch_array())
 		//error_log($cron->getDebug());
 
 		if ($cron->getLastRanUnix() > $crontask['ran_at']){
-			if(LOG) {
+			if(LOG_HEARTBEAT) {
 				error_log("'$crontask[task]' \r\ndue to be run at: $lastRan[5]-$lastRan[3]-$lastRan[2] $lastRan[1]:$lastRan[0]\r\nlast ran at: " . date('Y-m-d H:i:s', $crontask['ran_at']) . "\r\nTime now is: " . date('Y-m-d H:i:s'));
 				error_log("Begin processing '$crontask[task]'");
 			}
@@ -61,7 +62,7 @@ while ($crontask = $crontasks1->fetch_array())
 			");
 		}
 		else{
-			if(LOG) {
+			if(LOG_HEARTBEAT) {
 				error_log("'$crontask[task]' is not due.\r\nLast due at: $lastRan[5]-$lastRan[3]-$lastRan[2] $lastRan[1]:$lastRan[0]\r\nlast ran at: " . date('Y-m-d H:i:s', $crontask['ran_at']) . "\r\nTime now is: " . date('Y-m-d H:i:s'));
 			}
 		}
