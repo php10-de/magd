@@ -9,4 +9,5 @@ xdebug.log
 /src/inc/config.inc.php
 /src/inc/pre.config.inc.php
 /src/var
+/src/red_button/output
 /src/red_button/array.txt

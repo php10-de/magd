@@ -16,7 +16,9 @@ services:
     user: "${UID}:${GID}" # Run container as your user
     command: >
       sh -c "chown -R ${UID}:www-data /var/www/html/src &&
-             apache2-foreground"
+        find /var/www/html/src -type f -exec chmod 664 {} \; &&
+        find /var/www/html/src -type d -exec chmod 775 {} \; &&
+        apache2-foreground"
 
   db:
     image: mariadb:10.1

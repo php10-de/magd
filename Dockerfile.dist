@@ -1,14 +1,51 @@
 FROM php:8.2-apache
 
-RUN apt-get update && apt-get install -y unzip wget
+ENV HOME=/var/www/.php-git-home
+
+USER root
+
+# Install required packages: unzip, wget, git, SSH
+RUN apt-get update && \
+    apt-get install -y unzip wget git openssh-client && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install IonCube Loader
 RUN wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && \
     tar xfz ioncube_loaders_lin_x86-64.tar.gz && \
-    cp ioncube/ioncube_loader_lin_8.1.so /usr/local/lib/php/extensions/no-debug-non-zts-*/ && \
+    cp ioncube/ioncube_loader_lin_8.2.so /usr/local/lib/php/extensions/no-debug-non-zts-*/ && \
     echo "zend_extension=ioncube_loader_lin_8.2.so" > /usr/local/etc/php/conf.d/00-ioncube.ini && \
     rm -rf ioncube*
 
+# Adjust Apache DocumentRoot
+RUN sed -i '/DocumentRoot/ s|/var/www/html$|/var/www/html/src|' /etc/apache2/sites-available/000-default.conf /etc/apache2/apache2.conf
+
+# Install PHP extensions
 RUN docker-php-ext-install mysqli
 
+# Optional: Create SSH config directory (if not mounting ~/.ssh)
+RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
+
+# Optional: Add GitHub to known_hosts to avoid host key prompt
+RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+RUN mkdir -p $HOME && chown -R appuser:www-data $HOME
+
+RUN git config --global --add safe.directory /var/www/html
+
+RUN git config --global user.email "magd@magd.tools"
+
+RUN git config --global user.name "MAGD"
+
+# Create a user with UID 1000 and add it to www-data group
+RUN id -u appuser 2>/dev/null || useradd -u 1000 -m -d /home/appuser -s /bin/bash appuser && \
+    usermod -a -G www-data appuser
+
+RUN bash -c "echo -n | openssl s_client -showcerts -connect git.sal-a.local:443 -servername git \
+        2>/dev/null  | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'  \
+        >> /etc/ssl/certs/ca-certificates.crt"
+
+# Set user to appuser (UID 1000)
+USER appuser
+
 EXPOSE 80
+
