@@ -18,71 +18,156 @@ if (isset($_REQUEST['manual']) || isset($_REQUEST['submit'])) {
     define('SILENT', true);
 }
 
+function gitExec($cmd) {
+    if (!SILENT) {
+        echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>" . htmlspecialchars($cmd) . "</pre>";
+    }
+    $output = shell_exec($cmd . " 2>&1");
+    if ($output === null) {
+        return "Fehler beim Ausführen des Befehls.";
+    }
+    return $output;
+}
+
+
+$homeDir = '/var/www/.php-git-home';
+
+// 1. Ensure the directory exists
+if (!is_dir($homeDir)) {
+    if (!mkdir($homeDir, 0700, true)) {
+        die("Failed to create HOME directory: $homeDir");
+    }
+}
+
+putenv('HOME=' . $homeDir);
+
 function puShitBaby($gitMessage = '--no message --') {
     $cmd = "cd " . escapeshellarg(DOC_ROOT) ." && git add .";
-    _exec($cmd);
+    $addResult = gitExec($cmd);
+    if (!SILENT) {
+        echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>" . htmlspecialchars($addResult) . "</pre>";
+    }
 
     //sleep(2);
     $cmd = "cd " . escapeshellarg(DOC_ROOT) ." && git commit -m " . escapeshellarg($gitMessage);
-    _exec($cmd);
+    $commitResult = gitExec($cmd);
+    if (!SILENT) {
+        echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>" . htmlspecialchars($commitResult) . "</pre>";
+    }
 
-    $cmd = "cd " . escapeshellarg(DOC_ROOT) ." && git push origin master";
-    _exec($cmd);
-}
-
-//ini_set('display_errors', 1);
-//error_reporting(E_ALL);
-//parse_str(file_get_contents('php://input'), $post);
-
-if (isset($_REQUEST['submit'])) {
-    $gitMessage = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
-    puShitBaby($gitMessage);
-} else if ($GIT_MESSAGE) {
-    puShitBaby($GIT_MESSAGE);
-}
-
-/*
-$git = new git();
-$git->run('git commit -m \'test\'', array('php10', 'gottoosion'));
-$git->run('git push origin master', array('php10', 'gottoosion'));
-
-class git {
-
-    public function run($command, array $arguments = array()) {
-        $pipes = array();
-        $directory = '/home/www/universal-kiosk.com';
-        $descriptorspec = array(
-            array('pipe', 'r'),  // STDIN
-            array('pipe', 'w'),  // STDOUT
-            array('file', $directory . '/error.txt', 'w'),  // STDERR
-        );
-        $process = proc_open($command, $descriptorspec, $pipes);
-        foreach ($arguments as $arg) {
-            // Write each of the supplied arguments to STDIN
-            fwrite($pipes[0], (preg_match("/\n(:?\s+)?$/", $arg) ? $arg : "{$arg}\n"));
-        }
-        $response = stream_get_contents($pipes[1]);
-        // Make sure that each pipe is closed to prevent a lockout
-        foreach ($pipes as $pipe) {
-            fclose($pipe);
-        }
-        proc_close($process);
-        return $response;
+    $cmd = "cd " . escapeshellarg(DOC_ROOT) ." && git push";
+    $pushResult = gitExec($cmd);
+    if (!SILENT) {
+        echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>" . htmlspecialchars($pushResult) . "</pre>";
     }
 }
-*/
+
+function showGitStatus() {
+    $cmd = "cd " . escapeshellarg(DOC_ROOT) . " && git status";
+    return gitExec($cmd);
+}
+
+function pullChanges() {
+    $cmd = "cd " . escapeshellarg(DOC_ROOT) . " && git pull";
+    return gitExec($cmd);
+}
+
+function switchBranch($branchName) {
+    $cmd = "cd " . escapeshellarg(DOC_ROOT) . " && git checkout " . escapeshellarg($branchName);
+    return gitExec($cmd);
+}
+
+function resetBranch() {
+    $cmd = "cd " . escapeshellarg(DOC_ROOT) . " && git reset --hard";
+    return gitExec($cmd);
+}
+
+function cleanBranch() {
+    $cmd = "cd " . escapeshellarg(DOC_ROOT) . " && git clean -fd";
+    return gitExec($cmd);
+}
 
 if (!SILENT) {
+    header('Content-Type: text/html; charset=UTF-8');
+    require("inc/header.inc.php");
+    GRGR(21);
+
     ?>
-    <html>
-    <body>
-    <div style="align:self-center;width:100%;text-align:center;padding-top:250px;-webkit-font-smoothing:subpixel-antialiased;line-height:1.4em;min-width:600px">
+
+    <header class="page-header">
+        <div class="right-wrapper pull-right">
+            <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+    <div class="row">
         <form action="push.php" method="post">
-            <input type="submit" name="submit" value="Push" style="background:#5AABAE;border-radius:36px;font-size:20px;width:424px;height:164px;color:#ffffff;padding:15px 10px 2px 10px;text-transform:uppercase;font-family:'PT Sans Narrow', sans-serif;font-weight:700;letter-spacing:1.2px;touch-action:manipulation;border:1px solid transparent;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;cursor:pointer"><br><br>
-            <input type="text" name="msg" placeholder="message" style="width: 270px;background: #fbfbfb;margin:2px 6px 16px 6px;font-size: 14px; border:1px solid #ddd;box-shadow: inset 0 1px 2px rgba(0,0,0,.07);color:#32373c;transition:50ms border-color ease-in-out">
-        </form></div>
-    </body>
-    </html>
+            <input type="hidden" name="manual" value="1">
+            <input type="submit" name="status" value="Status" style="..."><br><br>
+            <input type="text" name="msg" placeholder="message" style="...">&nbsp;&nbsp;<input type="submit" name="submit" value="Push" style="..."><br><br>
+            <input type="submit" name="pull" value="Pull" style="..."><br><br>
+            <input type="text" name="branch" placeholder="Branch-Name" style="...">&nbsp;&nbsp;<input type="submit" name="switch_branch" value="Switch Branch" style="..."><br><br>
+            <input type="submit" name="reset" value="Reset/Restore" style="...">
+        </form>
+        <br>
+        <?php
+
+        // check if user is already set in .git/config
+        $gitConfigFile = DOC_ROOT . '../.git/config';
+        if (file_exists($gitConfigFile)) {
+            $configContent = file_get_contents($gitConfigFile);
+            if (strpos($configContent, 'user') === false) {
+                echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>Git user not configured. Configuring now...</pre>";
+                $cmd = 'git config --add safe.directory /var/www/html';
+                gitExec($cmd);
+
+                $cmd = 'git config user.email "magd@sal-a.de"';
+                gitExec($cmd);
+
+                $cmd = 'git config user.name "MAGD"';
+                gitExec($cmd);
+            } else {
+                //echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>Git user already configured.</pre>";
+            }
+        } else {
+            echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>Git config file not found.</pre>";
+        }
+
+        $gitStatus = showGitStatus();
+
+        if (isset($_REQUEST['pull'])) {
+            $gitPullOutput = pullChanges();
+            echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>" . htmlspecialchars($gitPullOutput) . "</pre>";
+        }
+
+        if (isset($_REQUEST['submit'])) {
+            $gitMessage = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
+            puShitBaby($gitMessage);
+        } else if ($GIT_MESSAGE) {
+            puShitBaby($GIT_MESSAGE);
+        }
+
+        if (isset($_REQUEST['reset'])) {
+            $resetOutput = resetBranch();
+            echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>" . htmlspecialchars($resetOutput) . "</pre>";
+            $resetOutput = cleanBranch();
+            echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>" . htmlspecialchars($cleanOutput) . "</pre>";
+        }
+
+        if (isset($_REQUEST['switch_branch'])) {
+            $branchName = isset($_REQUEST['branch']) ? $_REQUEST['branch'] : '';
+            if (!empty($branchName)) {
+                $switchOutput = switchBranch($branchName);
+                echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>" . htmlspecialchars($switchOutput) . "</pre>";
+            } else {
+                echo "<pre style='text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;'>Branch-Name darf nicht leer sein.</pre>";
+            }
+        }
+        ?>
+        <pre style="text-align:left;padding:20px;background:#f4f4f4;border:1px solid #ddd;overflow:auto;"><?php echo htmlspecialchars($gitStatus); ?></pre>
+    </div>
     <?php
+    require 'inc/footer.inc.php';
 }
 ?>
